@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Induction ou théorie</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="app">
+  <header class="top">
+    <h1>Induction ou théorie</h1>
+    <p class="scenario-name" id="scenario-name"></p>
+  </header>
+
+  <main class="layout">
+    <section class="stage" aria-label="Graphique">
+      <div class="plot">
+        <canvas id="plot" tabindex="0" role="img" aria-label="Graphique"></canvas>
+        <p class="flash" id="flash" role="status" aria-live="polite" hidden></p>
+      </div>
+      <div class="bar">
+        <button type="button" class="toggle" id="tog-model" aria-pressed="true"><span class="swatch swatch-model" aria-hidden="true"></span>Modèle</button>
+        <button type="button" class="toggle" id="tog-theory" aria-pressed="true"><span class="swatch swatch-theory" aria-hidden="true"></span>Théorie</button>
+        <button type="button" class="primary" id="reveal" aria-pressed="false">Révéler</button>
+      </div>
+    </section>
+
+    <section class="side" aria-label="Réglages">
+     <div class="tabbed" id="tabbed">
+      <div class="tabs" role="tablist">
+        <button type="button" role="tab" id="tab-story" aria-controls="panel-story" aria-selected="true">Récit</button>
+        <button type="button" role="tab" id="tab-model" aria-controls="panel-model" aria-selected="false" tabindex="-1">Modèle</button>
+        <button type="button" role="tab" id="tab-theory" aria-controls="panel-theory" aria-selected="false" tabindex="-1">Théorie</button>
+        <button type="button" role="tab" id="tab-verdict" aria-controls="panel-verdict" aria-selected="false" tabindex="-1">Verdict</button>
+      </div>
+
+      <div class="panel" id="panel-story" role="tabpanel" aria-labelledby="tab-story">
+        <div class="choices" id="choices" role="group" aria-label="Scénario"></div>
+        <p class="context" id="story-context"></p>
+        <p class="hint source" id="story-source"></p>
+        <ol class="steps" id="story-steps"></ol>
+        <div class="story-actions">
+          <button type="button" class="primary" id="start-tour">Commencer la visite guidée</button>
+          <button type="button" class="secondary" id="open-reading">Lire le graphique</button>
+          <button type="button" class="secondary" id="open-words">Les mots</button>
+        </div>
+      </div>
+
+      <div class="panel" id="panel-model" role="tabpanel" aria-labelledby="tab-model" hidden>
+        <div class="seg" id="kind-seg" role="group" aria-label="Type de modèle"></div>
+        <p class="note" id="kind-note"></p>
+        <label class="field" for="complexity">
+          <span class="field-name"><span id="complexity-name"></span> <output id="complexity-out"></output></span>
+          <input type="range" id="complexity" step="1">
+        </label>
+        <p class="note" id="complexity-note"></p>
+        <div class="actions">
+          <button type="button" class="icon" id="btn-remove" aria-label="Retirer le point sélectionné" title="Retirer le point sélectionné">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7h14M10 7V5h4v2M7 7l1 12h8l1-12M10 11v5M14 11v5"/></svg>
+          </button>
+          <button type="button" class="icon" id="btn-clear" aria-label="Effacer tous les points" title="Effacer tous les points">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+          </button>
+          <button type="button" class="icon" id="btn-reset" aria-label="Rétablir les points de départ" title="Rétablir les points de départ">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 8 0 1 0 3-6.2M4 4v4h4"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="panel" id="panel-theory" role="tabpanel" aria-labelledby="tab-theory" hidden>
+        <label class="field" for="expr">
+          <span class="field-name">Loi : y =</span>
+          <input type="text" id="expr" spellcheck="false" autocomplete="off" autocapitalize="off" maxlength="200">
+        </label>
+        <p class="error" id="expr-error" role="alert" hidden></p>
+        <div id="params"></div>
+        <button type="button" class="secondary" id="btn-preset" hidden></button>
+        <p class="note">Variables : x, a, b, c. Opérations : + − × ÷ ^ ; fonctions : sin, cos, exp, ln, sqrt, abs.</p>
+      </div>
+
+      <div class="panel" id="panel-verdict" role="tabpanel" aria-labelledby="tab-verdict" hidden>
+        <div id="verdict"></div>
+      </div>
+     </div>
+
+      <section class="teacher" id="teacher" hidden aria-label="Professeur">
+        <div class="teacher-top">
+          <p class="teacher-count" id="t-count"></p>
+          <div class="teacher-tools">
+            <button type="button" class="icon" id="t-prev" aria-label="Étape précédente" title="Étape précédente">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>
+            </button>
+            <button type="button" class="icon" id="t-reading" aria-label="Lire le graphique" title="Lire le graphique">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.4-1 .9-1 1.7M12 16.8v.2"/></svg>
+            </button>
+            <button type="button" class="icon" id="t-words" aria-label="Les mots" title="Les mots">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5h6a2 2 0 0 1 2 2v12a2 2 0 0 0-2-2H5zM19 5h-6M19 5v12h-6"/></svg>
+            </button>
+            <button type="button" class="icon" id="t-quit" aria-label="Quitter la visite" title="Quitter la visite">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+            </button>
+          </div>
+        </div>
+        <div class="teacher-body" id="t-body">
+          <p class="hint" id="t-intro" hidden></p>
+          <h2 id="t-title"></h2>
+          <p class="say" id="t-say"></p>
+          <p class="task" id="t-task"><span class="done" id="t-done" hidden>Fait</span><span id="t-task-text"></span></p>
+          <div id="t-action"></div>
+          <p class="hint" id="t-hint"></p>
+          <div id="t-sheet" hidden></div>
+        </div>
+        <button type="button" class="primary teacher-next" id="t-next">Suivant</button>
+      </section>
+    </section>
+  </main>
+</div>
+<script src="js/expr.js"></script>
+<script src="js/model.js"></script>
+<script src="js/scenarios.js"></script>
+<script src="js/teacher.js"></script>
+<script src="js/lessons.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

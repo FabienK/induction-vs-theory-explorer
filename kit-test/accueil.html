@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tester la démo : induction ou théorie</title>
+  <style>
+    :root {
+      --bg: #e6eae3;
+      --panel: #f5f6f1;
+      --ink: #1b2a29;
+      --ink-soft: #52625d;
+      --line: #c2cbc1;
+      --on-accent: #f5f6f1;
+      --font: "Avenir Next", "Segoe UI", system-ui, -apple-system, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100dvh; margin: 0; overflow: hidden; background: var(--bg); color: var(--ink); font-family: var(--font); line-height: 1.5; }
+    main { height: 100dvh; overflow: auto; display: flex; align-items: center; justify-content: center; padding: 16px; }
+    .card { width: min(560px, 100%); background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 24px; }
+    h1 { margin: 0 0 12px; font-size: 1.3rem; font-weight: 500; }
+    p { margin: 0 0 12px; }
+    .soft { color: var(--ink-soft); font-size: 0.92rem; }
+    .actions { display: flex; flex-direction: column; gap: 8px; margin-top: 16px; }
+    a.btn { min-height: 48px; display: flex; align-items: center; justify-content: center; border-radius: 8px; border: 1px solid var(--ink); color: var(--ink); text-decoration: none; padding: 0 14px; }
+    a.btn.primary { background: var(--ink); color: var(--on-accent); font-weight: 500; }
+    a.btn:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+  </style>
+</head>
+<body>
+<main>
+  <div class="card">
+    <h1>Aidez-nous à tester une démo</h1>
+    <p>Interpoler une courbe à partir de données, est-ce la même chose que proposer une théorie ? Cette démo interactive l'illustre avec les planètes de Kepler. Nous voulons savoir si elle est claire pour quelqu'un qui découvre le sujet.</p>
+    <p>Comptez environ 12 minutes : une question avant, la démo, quelques questions après.</p>
+    <p class="soft">Le questionnaire est anonyme : ni nom, ni e-mail. La démo ne collecte rien et fonctionne sans compte. Ce que vous écrivez sert uniquement à l'améliorer.</p>
+    <div class="actions">
+      <a class="btn primary" href="FORMULAIRE_URL">Commencer par le questionnaire</a>
+      <a class="btn" href="../index.html">Voir la démo seule</a>
+    </div>
+  </div>
+</main>
+</body>
+</html>
