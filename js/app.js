@@ -327,22 +327,39 @@
     const span = v.y1 - v.y0;
     const clampY = (y) => Math.max(v.y0 - 10 * span, Math.min(v.y1 + 10 * span, y));
 
+    /* Un seul tracé continu par tronçon de même style : un pointillé redémarrerait à chaque petit segment
+       et paraîtrait plein. */
     function curve(fn, color, dashOutside, halo) {
       const N = Math.max(60, Math.ceil(g.pw / 2));
-      let prev = null, dashed = null;
       ctx.strokeStyle = color;
       ctx.globalAlpha = halo ? 0.25 : 1;
+      let prev = null, mode = null, open = false;
+      const flush = () => {
+        if (!open) return;
+        ctx.setLineDash(mode === 'out' ? [8, 6] : []);
+        ctx.lineWidth = halo ? 14 : mode === 'out' ? 2.5 : 3.5;
+        ctx.stroke();
+        open = false;
+      };
       for (let i = 0; i <= N; i++) {
         const x = v.x0 + ((v.x1 - v.x0) * i) / N;
         const y = fn(x);
         const cur = Number.isFinite(y) ? { x, y: clampY(y) } : null;
-        if (prev && cur) {
-          const out = !halo && dashOutside && (x + prev.x) / 2 > s.zone.x1;
-          if (out !== dashed) { ctx.setLineDash(out ? [8, 6] : []); ctx.lineWidth = halo ? 14 : out ? 2.5 : 3.5; dashed = out; }
-          ctx.beginPath(); ctx.moveTo(g.sx(prev.x), g.sy(prev.y)); ctx.lineTo(g.sx(cur.x), g.sy(cur.y)); ctx.stroke();
+        if (!cur) { flush(); prev = null; continue; }
+        if (prev) {
+          const seg = !halo && dashOutside && (x + prev.x) / 2 > s.zone.x1 ? 'out' : 'in';
+          if (!open || seg !== mode) {
+            flush();
+            mode = seg;
+            ctx.beginPath();
+            ctx.moveTo(g.sx(prev.x), g.sy(prev.y));
+            open = true;
+          }
+          ctx.lineTo(g.sx(cur.x), g.sy(cur.y));
         }
         prev = cur;
       }
+      flush();
       ctx.setLineDash([]);
       ctx.globalAlpha = 1;
     }
